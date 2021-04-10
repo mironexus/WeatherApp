@@ -1,24 +1,13 @@
 package com.example.weatherapp
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.adapters.SearchRecycleAdapter
-import com.example.weatherapp.api.RetrofitInstance
-import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.databinding.FragmentSearchBinding
-import com.example.weatherapp.model.Location
-import kotlinx.android.synthetic.main.search_toolbar.*
-import kotlinx.coroutines.launch
-
 
 
 class SearchFragment : Fragment() {
@@ -27,8 +16,7 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-//    val myResponse: MutableLiveData<Location> = MutableLiveData()
-//    val myResponses: MutableLiveData<List<Location>> = MutableLiveData()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,37 +26,30 @@ class SearchFragment : Fragment() {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        //every time that viewmodel updates update adapter with current viewmodel's list of Locations
+        sharedViewModel.locations.observe(viewLifecycleOwner, Observer {
+            setAdapter()
+        })
 
 
         binding.searchButton.setOnClickListener {
 
-            var searchQuery = if(binding.searchEdittext.text.toString() != "") binding.searchEdittext.text.toString() else "Zagreb"
+                if(binding.searchEdittext.text.toString() != "") {
+                    var searchQuery = binding.searchEdittext.text.toString()
 
-            lifecycleScope.launch {
+                    sharedViewModel.retrieveLocations(searchQuery)
 
-                //get all Locations from search
-                val responses = RetrofitInstance.api.getLocations(searchQuery)
-
-                //use woeids from found Locations to fill every location's consolidated_weather list of Weathers
-                for (loc: Location in responses) {
-                    var response = RetrofitInstance.api.getLocation(loc.woeid)
-                    loc.consolidated_weather = response.consolidated_weather
                 }
-
-                binding.searchRecyclerView.adapter =
-                    SearchRecycleAdapter(
-                        responses
-                    )
-                binding.searchRecyclerView.layoutManager = LinearLayoutManager(activity)
-                binding.searchRecyclerView.setHasFixedSize(true)
-
-            }
 
         }
 
-
-
         return view
+    }
+
+    private fun setAdapter() {
+        binding.searchRecyclerView.adapter = SearchRecycleAdapter(sharedViewModel.locations)
+        binding.searchRecyclerView.layoutManager = LinearLayoutManager(activity)
+        binding.searchRecyclerView.setHasFixedSize(true)
     }
 
     override fun onDestroyView() {
