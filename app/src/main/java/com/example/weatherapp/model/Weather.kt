@@ -1,5 +1,6 @@
 package com.example.weatherapp.model
 
+import java.io.Serializable
 import java.util.*
 
 data class Weather(
@@ -18,4 +19,4 @@ data class Weather(
     var humidity: Integer,
     var visibility: Double,
     var predictability: Integer
-)
+) : Serializable

@@ -10,7 +10,7 @@ import com.example.weatherapp.adapters.SearchRecycleAdapter
 import com.example.weatherapp.databinding.FragmentSearchBinding
 
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
 
     //FragmentSearchBinding gets name from fragment's xml name
     private var _binding: FragmentSearchBinding? = null
@@ -33,21 +33,17 @@ class SearchFragment : Fragment() {
 
 
         binding.searchButton.setOnClickListener {
-
                 if(binding.searchEdittext.text.toString() != "") {
                     var searchQuery = binding.searchEdittext.text.toString()
-
                     sharedViewModel.retrieveLocations(searchQuery)
-
                 }
-
         }
 
         return view
     }
 
     private fun setAdapter() {
-        binding.searchRecyclerView.adapter = SearchRecycleAdapter(sharedViewModel.locations)
+        binding.searchRecyclerView.adapter = SearchRecycleAdapter(sharedViewModel.locations, this)
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(activity)
         binding.searchRecyclerView.setHasFixedSize(true)
     }
@@ -55,6 +51,11 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onItemClick(position: Int) {
+//        val intent = Intent(context, RecyclerItemActivity::class.java)
+//        startActivity(intent)
     }
 
 
