@@ -20,6 +20,13 @@ class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<Locatio
 )
     : RecyclerView.Adapter<SearchRecycleAdapter.RecycleViewHolder>() {
 
+    fun updateData(weatherList: MutableLiveData<List<Location>>) {
+        this.weatherList = weatherList
+
+        //finc better notify method
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
             R.layout.search_recycler_item,
@@ -64,9 +71,7 @@ class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<Locatio
             if (v != null) {
                 var intent = Intent(v.context, CityActivity::class.java)
                 if (currentItem != null) {
-                    intent.putExtra("title", currentItem.title)
                     intent.putExtra("woeid", currentItem.woeid)
-                    intent.putExtra("consolidated_weather", currentItem.consolidated_weather as Serializable)
                 }
                 v.context.startActivity(intent)
             }
@@ -79,8 +84,6 @@ class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<Locatio
     interface OnItemClickListener {
         fun onItemClick(position: Int)
     }
-
-
 
 
 }

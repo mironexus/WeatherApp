@@ -26,9 +26,13 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        //create adapter so updateData method can be used
+        var adapter = SearchRecycleAdapter(sharedViewModel.locations, this)
+        setAdapter(adapter)
+
         //every time that viewmodel updates update adapter with current viewmodel's list of Locations
         sharedViewModel.locations.observe(viewLifecycleOwner, Observer {
-            setAdapter()
+            adapter.updateData(sharedViewModel.locations)
         })
 
 
@@ -42,8 +46,9 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         return view
     }
 
-    private fun setAdapter() {
-        binding.searchRecyclerView.adapter = SearchRecycleAdapter(sharedViewModel.locations, this)
+    private fun setAdapter(adapter: SearchRecycleAdapter) {
+        //binding.searchRecyclerView.adapter = SearchRecycleAdapter(sharedViewModel.locations, this)
+        binding.searchRecyclerView.adapter = adapter
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(activity)
         binding.searchRecyclerView.setHasFixedSize(true)
     }

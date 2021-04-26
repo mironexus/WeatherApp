@@ -7,19 +7,18 @@ import com.example.weatherapp.model.Location
 import com.example.weatherapp.repository.Repository
 import kotlinx.coroutines.launch
 
+class CityItemViewModel: ViewModel() {
 
-class SharedViewModel: ViewModel() {
-
-    var locations = MutableLiveData<List<Location>>()
+    var location = MutableLiveData<Location>()
     val repository = Repository()
 
     init {
-        locations.value = listOf()
+
     }
 
-    fun retrieveLocations(searchQuery: String) {
+    fun setLocation(woeid: Int) {
         viewModelScope.launch {
-            locations.value = repository.getLocations(searchQuery)
+            location.value = repository.getLocation(woeid)
         }
     }
 

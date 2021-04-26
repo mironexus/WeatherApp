@@ -16,7 +16,7 @@ data class Weather(
     var wind_speed: Double,
     var wind_direction: Double,
     var air_pressure: Float,
-    var humidity: Integer,
+    var humidity: Int,
     var visibility: Double,
-    var predictability: Integer
+    var predictability: Int
 ) : Serializable
