@@ -1,26 +1,56 @@
 package com.example.weatherapp
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.model.Location
-import com.example.weatherapp.repository.Repository
+import com.example.weatherapp.database.AppDatabase
+import com.example.weatherapp.model.LocationCard
+import com.example.weatherapp.model.SearchLocation
+import com.example.weatherapp.repository.RepositoryImpl
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
-class SharedViewModel: ViewModel() {
+class SharedViewModel(application: Application): AndroidViewModel(application) {
 
-    var locations = MutableLiveData<List<Location>>()
-    val repository = Repository()
+    var locations = MutableLiveData<List<LocationCard>>()
+
+    private val repository: RepositoryImpl
 
     init {
         locations.value = listOf()
+        repository = RepositoryImpl(getApplication())
     }
 
-    fun retrieveLocations(searchQuery: String) {
+
+    fun saveLocations(query: String) {
         viewModelScope.launch {
-            locations.value = repository.getLocations(searchQuery)
+            repository.saveSearchResult(query)
+            retrieveLocations()
         }
     }
+
+    fun deleteAll() {
+        viewModelScope.launch {
+            repository.deleteAllSearchLocations()
+            retrieveLocations()
+        }
+    }
+
+    fun retrieveLocations() {
+        viewModelScope.launch {
+            locations.value = repository.getLocationCardList()
+        }
+    }
+
+    fun setAsMyCity(woeid: Int) {
+        viewModelScope.launch {
+            repository.setAsMyCity(woeid)
+        }
+    }
+
+
 
 }

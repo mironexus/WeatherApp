@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.weatherapp.databinding.ActivityMainBinding
 import androidx.appcompat.widget.SearchView;
+import com.example.weatherapp.database.AppDatabase
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -16,6 +17,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
 
         val searchFragment = SearchFragment()
 //        val myCitiesFragment = MyCitiesFragment()

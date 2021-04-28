@@ -1,24 +1,25 @@
 package com.example.weatherapp
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.model.Location
-import com.example.weatherapp.repository.Repository
+import com.example.weatherapp.model.LocationDetails
+import com.example.weatherapp.repository.RepositoryImpl
 import kotlinx.coroutines.launch
 
-class CityItemViewModel: ViewModel() {
+class CityItemViewModel(application: Application): AndroidViewModel(application) {
 
-    var location = MutableLiveData<Location>()
-    val repository = Repository()
+    var location = MutableLiveData<LocationDetails>()
+    private val repository: RepositoryImpl
 
     init {
-
+        repository = RepositoryImpl(getApplication())
     }
 
     fun setLocation(woeid: Int) {
         viewModelScope.launch {
-            location.value = repository.getLocation(woeid)
+            location.value = repository.getSingleLocation(woeid)
         }
     }
 

@@ -27,20 +27,27 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         val view = binding.root
 
         //create adapter so updateData method can be used
-        var adapter = SearchRecycleAdapter(sharedViewModel.locations, this)
+        var adapter = SearchRecycleAdapter(sharedViewModel.locations, this, sharedViewModel)
         setAdapter(adapter)
+
+        //set viewmodel data
+        sharedViewModel.retrieveLocations()
 
         //every time that viewmodel updates update adapter with current viewmodel's list of Locations
         sharedViewModel.locations.observe(viewLifecycleOwner, Observer {
             adapter.updateData(sharedViewModel.locations)
         })
 
-
         binding.searchButton.setOnClickListener {
                 if(binding.searchEdittext.text.toString() != "") {
                     var searchQuery = binding.searchEdittext.text.toString()
-                    sharedViewModel.retrieveLocations(searchQuery)
+                    sharedViewModel.saveLocations(searchQuery)
                 }
+        }
+
+        binding.deleteButton.setOnClickListener{
+            sharedViewModel.deleteAll()
+            adapter.updateData(sharedViewModel.locations)
         }
 
         return view
