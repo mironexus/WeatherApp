@@ -7,5 +7,8 @@ data class LocationCard (
     var longitude: String,
     var the_temp: Double,
     var weather_state_abbr: String,
+    var distance: Int,
+    var time: String,
+    var timezone: String,
     var isMyCity: Boolean
 )

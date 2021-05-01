@@ -1,7 +1,12 @@
 package com.example.weatherapp
 
+import android.content.Context
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -27,27 +32,30 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         val view = binding.root
 
         //create adapter so updateData method can be used
-        var adapter = SearchRecycleAdapter(sharedViewModel.locations, this, sharedViewModel)
+        var adapter = SearchRecycleAdapter(sharedViewModel.locations, this, sharedViewModel, false)
         setAdapter(adapter)
 
-        //set viewmodel data
-        sharedViewModel.retrieveLocations()
+        if (isNetworkConnected()) {
+            //set viewmodel data
+            sharedViewModel.retrieveLocations()
 
-        //every time that viewmodel updates update adapter with current viewmodel's list of Locations
-        sharedViewModel.locations.observe(viewLifecycleOwner, Observer {
-            adapter.updateData(sharedViewModel.locations)
-        })
+            //every time that viewmodel updates update adapter with current viewmodel's list of Locations
+            sharedViewModel.locations.observe(viewLifecycleOwner, Observer {
+                adapter.updateData(sharedViewModel.locations)
+            })
 
-        binding.searchButton.setOnClickListener {
-                if(binding.searchEdittext.text.toString() != "") {
+            binding.searchButton.setOnClickListener {
+                if (binding.searchEdittext.text.toString() != "") {
                     var searchQuery = binding.searchEdittext.text.toString()
                     sharedViewModel.saveLocations(searchQuery)
                 }
-        }
+            }
 
-        binding.deleteButton.setOnClickListener{
-            sharedViewModel.deleteAll()
-            adapter.updateData(sharedViewModel.locations)
+            binding.deleteButton.setOnClickListener {
+                sharedViewModel.deleteAll()
+                adapter.updateData(sharedViewModel.locations)
+            }
+
         }
 
         return view
@@ -68,6 +76,18 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
     override fun onItemClick(position: Int) {
 //        val intent = Intent(context, RecyclerItemActivity::class.java)
 //        startActivity(intent)
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        //add activity? if used in fragment
+        val connectivityManager = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        //2
+        val activeNetwork = connectivityManager.activeNetwork
+        //3
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+        //4
+        return networkCapabilities != null &&
+                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
 

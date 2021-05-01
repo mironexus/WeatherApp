@@ -1,14 +1,11 @@
 package com.example.weatherapp.adapters
 
-import android.app.Application
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -17,11 +14,11 @@ import com.example.weatherapp.R
 import com.example.weatherapp.SharedViewModel
 import com.example.weatherapp.model.LocationCard
 import kotlinx.android.synthetic.main.search_recycler_item.view.*
-import java.io.Serializable
 
 class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<LocationCard>>,
                            private val listener: OnItemClickListener,
-                           private val sharedViewModel: SharedViewModel
+                           private val sharedViewModel: SharedViewModel,
+                           private val isMyCitiesList: Boolean
 )
     : RecyclerView.Adapter<SearchRecycleAdapter.RecycleViewHolder>() {
 
@@ -29,7 +26,7 @@ class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<Locatio
     fun updateData(weatherList: MutableLiveData<List<LocationCard>>) {
         this.weatherList = weatherList
 
-        //finc better notify method
+        //find better notify method
         notifyDataSetChanged()
     }
 
@@ -47,16 +44,41 @@ class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<Locatio
         val currentItem = weatherList.value?.get(position)
 
         if(currentItem != null) {
+            holder.title.text = currentItem.title
+
+            if(isMyCitiesList) {
+                holder.coordinates.text = currentItem.time
+                holder.distance.text = currentItem.timezone
+            }
+            else {
+                holder.coordinates.text = currentItem.lattitude + " " + currentItem.longitude
+                holder.distance.text = "Distance: " + currentItem.distance.toString() + " km"
+            }
+
+            holder.temperature.text = currentItem.the_temp.toInt().toString() + "°"
+
             val image = currentItem.weather_state_abbr
-            holder.imageView.load("https://www.metaweather.com/static/img/weather/png/64/$image.png")
-
-            holder.textView1.text = currentItem.title
-            holder.textView2.text = currentItem.the_temp.toString()
-
+            holder.weatherStateAbbr.load("https://www.metaweather.com/static/img/weather/png/64/$image.png")
 
             if (currentItem.isMyCity) {
                 holder.setMyCityButton.setImageResource(R.drawable.ic_star_1)
             }
+
+            holder.setMyCityButton.setOnClickListener {
+
+                if (currentItem.isMyCity) {
+                    currentItem.isMyCity = false
+                    holder.setMyCityButton.setImageResource(R.drawable.ic_star_0)
+                    sharedViewModel.removeFromMyCities(currentItem.woeid)
+                }
+                else {
+                    currentItem.isMyCity = true
+                    holder.setMyCityButton.setImageResource(R.drawable.ic_star_1)
+                    sharedViewModel.setAsMyCity(currentItem.woeid)
+                }
+
+            }
+
 
         }
 
@@ -65,23 +87,15 @@ class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<Locatio
     override fun getItemCount() = weatherList.value!!.size
 
     inner class RecycleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        val imageView: ImageView = itemView.image_view
-        val textView1: TextView = itemView.top_info
-        val textView2: TextView = itemView.bottom_info
+        val title: TextView = itemView.title
         val setMyCityButton: ImageView = itemView.set_my_city
+        val coordinates: TextView = itemView.coordinates
+        val distance: TextView = itemView.distance
+        val temperature: TextView = itemView.temperature
+        val weatherStateAbbr: ImageView = itemView.weather_state_abbr
 
         init {
             itemView.setOnClickListener(this)
-            setMyCityButton.setOnClickListener {
-
-                val position = adapterPosition
-                val currentItem = weatherList.value?.get(position)
-
-                if (currentItem != null) {
-                    sharedViewModel.setAsMyCity(currentItem.woeid)
-                    currentItem.isMyCity = true
-                }
-            }
         }
 
         override fun onClick(v: View?) {

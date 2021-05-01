@@ -1,5 +1,8 @@
 package com.example.weatherapp
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -21,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val searchFragment = SearchFragment()
-//        val myCitiesFragment = MyCitiesFragment()
+        val myCitiesFragment = MyCitiesFragment()
 //        val settingsFragment = SettingsFragment()
 
         //sets default fragment
@@ -30,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.search-> setFragment(searchFragment)
-//                R.id.myCities -> setFragment(myCitiesFragment)
+                R.id.my_cities -> setFragment(myCitiesFragment)
 //                R.id.settings -> setFragment(settingsFragment)
             }
             true
@@ -45,6 +48,18 @@ class MainActivity : AppCompatActivity() {
             replace(R.id.frag_container, fragment)
             commit()
         }
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        //1
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        //2
+        val activeNetwork = connectivityManager.activeNetwork
+        //3
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+        //4
+        return networkCapabilities != null &&
+                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
 

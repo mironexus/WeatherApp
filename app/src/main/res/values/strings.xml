@@ -5,4 +5,19 @@
     <string name="settings">Settings</string>
     <string name="city_name">City name</string>
     <string name="city_temperature">Temperature</string>
+    <string name="latitude_and_longitude">Latitude and longitude</string>
+    <string name="distance">Distance: 9000 km</string>
+    <string name="temp_with_degree">23°</string>
+
+    <string name="city_activity_date_format">Mon, March 15</string>
+    <string name="city_activity_time_format">09:32 AM (GMT-7)</string>
+    <string name="city_activity_weather_description">Light Rain</string>
+    <string name="city_activity_temp_label">20°</string>
+
+    <string name="city_activity_min_max">MIN / MAX</string>
+    <string name="city_activity_wind">WIND</string>
+    <string name="city_activity_humidity">HUMIDITY</string>
+    <string name="city_activity_pressure">PRESSURE</string>
+    <string name="city_activity_visibility">VISIBILITY</string>
+    <string name="city_activity_accuracy">ACCURACY</string>
 </resources>

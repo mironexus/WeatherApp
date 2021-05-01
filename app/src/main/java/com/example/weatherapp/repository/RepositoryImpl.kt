@@ -1,12 +1,14 @@
 package com.example.weatherapp.repository
 
 import android.app.Application
+import android.location.Location
 import android.util.Log
 import com.example.weatherapp.api.RetrofitInstance
 import com.example.weatherapp.database.AppDatabase
 import com.example.weatherapp.database.MyCitiesDAO
 import com.example.weatherapp.database.SearchDAO
 import com.example.weatherapp.model.*
+import java.util.*
 
 class RepositoryImpl(application: Application) {
 
@@ -27,7 +29,7 @@ class RepositoryImpl(application: Application) {
     suspend fun saveSearchResult(query: String) {
         //make request for locations defined by searchQuery
         val locationListResponse = RetrofitInstance.api.getLocationsFromApi(query)
-        var fetchedLocations: List<SearchLocation>
+        val fetchedLocations: List<SearchLocation>
 
         if(locationListResponse.isSuccessful) {
             //get all Locations from search
@@ -47,28 +49,56 @@ class RepositoryImpl(application: Application) {
 
 
 
-    suspend fun getLocationCardList(): List<LocationCard> {
+    suspend fun getLocationCardList(isMyCityList: Boolean): List<LocationCard> {
 
         //to be returned from function
-        var locationCardList: MutableList<LocationCard> = mutableListOf()
+        val locationCardList: MutableList<LocationCard> = mutableListOf()
 
-        var locationsFromDatabase = getAllLocations()
+        val locationsFromDatabase = getAllLocations()
 
         for (location: SearchLocation in locationsFromDatabase) {
 
-            var check = checkIfMyCity(location.woeid)
 
-            var locationCard = LocationCard(
+            val check = checkIfMyCity(location.woeid)
+            val singleLocation = getSingleLocation(location.woeid)
+            val weather = getSingleWeather(singleLocation)
+            val coordinates = getLattLongFloat(location.latt_long)
+            val coordinatesString = getLattLong(coordinates)
+            val distance = getDistance(coordinates).toInt() / 1000
+
+            var time = ""
+            var timezone = ""
+
+            if(isMyCityList) {
+                var tz = TimeZone.getTimeZone(singleLocation.timezone)
+                var shortTZ = tz.getDisplayName(false, TimeZone.SHORT)
+                timezone = shortTZ
+                time = singleLocation.time.time.toString()
+            }
+
+            val locationCard = LocationCard(
                 location.title,
                 location.woeid,
-                "lt",
-                "ln",
-                10.0,
-                "sn",
+                coordinatesString[0],
+                coordinatesString[1],
+                weather.the_temp,
+                weather.weather_state_abbr,
+                distance,
+                time,
+                timezone,
                 check
             )
-            locationCardList.add(locationCard)
+            //to put in myCities list
+            if(check && isMyCityList) {
+                locationCardList.add(locationCard)
+            }
+            //to filter non-MyCities from myCities list
+            else if(!check && isMyCityList) {
 
+            }
+            else {
+                locationCardList.add(locationCard)
+            }
         }
 
 
@@ -82,7 +112,8 @@ class RepositoryImpl(application: Application) {
 
     suspend fun getSingleLocation(woeid: Int): LocationDetails {
         val emptyWeatherList: List<Weather> = listOf()
-        var location = LocationDetails(1,"", emptyWeatherList)
+        var date: Date = Date()
+        var location = LocationDetails(1,"", emptyWeatherList, date, "")
 
         val singleLocationResponse = RetrofitInstance.api.getSingleLocationFromApi(woeid)
         if(singleLocationResponse.isSuccessful) {
@@ -97,13 +128,90 @@ class RepositoryImpl(application: Application) {
         return location
     }
 
+    private fun getSingleWeather(singleLocation: LocationDetails): Weather {
+        return singleLocation.consolidated_weather[0]
+    }
+
+    private fun getLattLongFloat(lattLongString: String): MutableList<Float> {
+        var separateLattLong = lattLongString.split(",")
+        var lattLongFloat: MutableList<Float> = mutableListOf()
+
+        for(l in separateLattLong) {
+            lattLongFloat.add(l.toFloat())
+        }
+        return lattLongFloat
+    }
+
+    private fun getLattLong(lattLongFloat: MutableList<Float>): MutableList<String> {
+
+        var lattFloat = lattLongFloat[0]
+        var longFloat = lattLongFloat[1]
+
+        var lattString = ""
+        var longString = ""
+        var compassValues: MutableList<String> = mutableListOf()
+
+        var lattInt = lattFloat.toInt()
+        var lattRemainder = lattFloat - lattInt
+        var formattedlattRemainder = String.format("%.2f", lattRemainder).replace("0.", "")
+
+        if(lattFloat > 0) {
+            lattString = "$lattInt°$formattedlattRemainder'N"
+        }
+        else{
+            lattInt = -lattInt
+            lattRemainder = -lattRemainder
+            formattedlattRemainder = String.format("%.2f", lattRemainder).replace("0.", "")
+            lattString = "$lattInt°$formattedlattRemainder'S"
+        }
+
+        compassValues.add(lattString)
+
+        var longInt = longFloat.toInt()
+        var longRemainder = longFloat - longInt
+        var formattedLongRemainder = String.format("%.2f", longRemainder).replace("0.", "")
+
+        if(longFloat > 0) {
+            longString = "$longInt°$formattedLongRemainder'E"
+        }
+        else{
+            longInt = -longInt
+            longRemainder = -longRemainder
+            formattedLongRemainder = String.format("%.2f", longRemainder).replace("0.", "")
+            longString = "$longInt°$formattedLongRemainder'W"
+        }
+
+        compassValues.add(longString)
+
+        return compassValues
+
+    }
+
+    fun getDistance(coordinates: MutableList<Float>): Float {
+
+        val start = Location("Start")
+        start.latitude = 45.807259
+        start.longitude = 15.967600
+
+        val destination = Location("Destination")
+        destination.latitude = coordinates[0].toDouble()
+        destination.longitude = coordinates[1].toDouble()
+
+        val distance = start.distanceTo(destination)
+        return distance
+    }
+
     suspend fun setAsMyCity(woeid: Int) {
-        var myCity = MyCity(woeid)
+        val myCity = MyCity(woeid)
         myCitiesDAO.insertMyCitiesLocation(myCity)
     }
 
-    suspend fun checkIfMyCity(woeid: Int): Boolean {
+    private suspend fun checkIfMyCity(woeid: Int): Boolean {
         return myCitiesDAO.checkIfMyCity(woeid)
+    }
+
+    suspend fun removeFromMyCites(woeid: Int) {
+        myCitiesDAO.removeFromMyCities(woeid)
     }
 
 

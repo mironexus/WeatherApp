@@ -1,53 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="360dp"
     android:layout_height="match_parent"
-    tools:context=".CityActivity">
+    tools:context=".CityActivity"
+    android:layout_gravity="center">
 
-    <ImageView
-        android:id="@+id/image_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_search_24"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="118dp"
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:text="@string/city_name"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/image_view"/>
+        >
 
-    <TextView
-        android:id="@+id/the_temp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintStart_toEndOf="@id/image_view"/>
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+            app:title="Collapse">
 
-    <TextView
-        android:id="@+id/wind"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/the_temp"
-        app:layout_constraintStart_toEndOf="@id/image_view"/>
 
-    <TextView
-        android:id="@+id/visibility"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/wind"
-        app:layout_constraintStart_toEndOf="@id/image_view"/>
 
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/visibility"
-        app:layout_constraintStart_toEndOf="@id/image_view"/>
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                app:layout_collapseMode="pin"
+                app:title="test">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/back_arrow"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_arrow_back"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    />
+
+
+                <ImageView
+                    android:id="@+id/set_my_city"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_star_0"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    />
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/weather_master_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".CityActivity"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="144dp"
+                android:layout_height="20dp"
+                android:text="@string/city_activity_date_format"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="144dp"
+                android:layout_height="20dp"
+                android:text="@string/city_activity_time_format"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/date"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/weather_description"
+                android:layout_width="144dp"
+                android:layout_height="20dp"
+                android:text="@string/city_activity_weather_description"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/time"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+
+            <TextView
+                android:id="@+id/temp_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/city_activity_temp_label"
+                android:textSize="64sp"
+                android:includeFontPadding="false"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/icon"
+                android:layout_marginEnd="8dp"/>
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/ic_baseline_search_24"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".CityActivity"
+                app:layout_constraintTop_toBottomOf="@id/icon"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.example.weatherapp.repository.WeatherInfoTile
+                    android:id="@+id/min_max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:iconResource="@drawable/ic_thermostat"
+                    app:title="@string/city_activity_min_max"
+                    app:value="@string/city_activity_temp_label"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+                </com.example.weatherapp.repository.WeatherInfoTile>
+                <com.example.weatherapp.repository.WeatherInfoTile
+                    android:id="@+id/wind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:iconResource="@drawable/ic_wind"
+                    app:title="@string/city_activity_wind"
+                    app:value="@string/city_activity_temp_label"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/min_max">
+                </com.example.weatherapp.repository.WeatherInfoTile>
+                <com.example.weatherapp.repository.WeatherInfoTile
+                    android:id="@+id/humidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:iconResource="@drawable/ic_humidity"
+                    app:title="@string/city_activity_humidity"
+                    app:value="@string/city_activity_temp_label"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/wind">
+                </com.example.weatherapp.repository.WeatherInfoTile>
+                <com.example.weatherapp.repository.WeatherInfoTile
+                    android:id="@+id/pressure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:iconResource="@drawable/ic_pressure"
+                    app:title="@string/city_activity_pressure"
+                    app:value="@string/city_activity_temp_label"
+                    app:layout_constraintTop_toBottomOf="@id/min_max"
+                    app:layout_constraintStart_toStartOf="parent">
+                </com.example.weatherapp.repository.WeatherInfoTile>
+                <com.example.weatherapp.repository.WeatherInfoTile
+                    android:id="@+id/visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:iconResource="@drawable/ic_visibility"
+                    app:title="@string/city_activity_visibility"
+                    app:value="@string/city_activity_temp_label"
+                    app:layout_constraintTop_toBottomOf="@id/wind"
+                    app:layout_constraintStart_toEndOf="@id/pressure">
+                </com.example.weatherapp.repository.WeatherInfoTile>
+                <com.example.weatherapp.repository.WeatherInfoTile
+                    android:id="@+id/accuracy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:iconResource="@drawable/ic_accuracy"
+                    app:title="@string/city_activity_accuracy"
+                    app:value="@string/city_activity_temp_label"
+                    app:layout_constraintTop_toBottomOf="@id/humidity"
+                    app:layout_constraintStart_toEndOf="@id/visibility">
+                </com.example.weatherapp.repository.WeatherInfoTile>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

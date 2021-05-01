@@ -16,11 +16,13 @@ import kotlinx.coroutines.launch
 class SharedViewModel(application: Application): AndroidViewModel(application) {
 
     var locations = MutableLiveData<List<LocationCard>>()
+    var myCities = MutableLiveData<List<LocationCard>>()
 
     private val repository: RepositoryImpl
 
     init {
         locations.value = listOf()
+        myCities.value = listOf()
         repository = RepositoryImpl(getApplication())
     }
 
@@ -41,13 +43,25 @@ class SharedViewModel(application: Application): AndroidViewModel(application) {
 
     fun retrieveLocations() {
         viewModelScope.launch {
-            locations.value = repository.getLocationCardList()
+            locations.value = repository.getLocationCardList(false)
+        }
+    }
+
+    fun retrieveMyCities() {
+        viewModelScope.launch {
+            myCities.value = repository.getLocationCardList(true)
         }
     }
 
     fun setAsMyCity(woeid: Int) {
         viewModelScope.launch {
             repository.setAsMyCity(woeid)
+        }
+    }
+
+    fun removeFromMyCities(woeid: Int) {
+        viewModelScope.launch {
+            repository.removeFromMyCites(woeid)
         }
     }
 

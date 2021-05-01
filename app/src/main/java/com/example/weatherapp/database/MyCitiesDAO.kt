@@ -12,6 +12,9 @@ interface MyCitiesDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMyCitiesLocation(myCity: MyCity)
 
+    @Query("DELETE FROM my_cities WHERE woeid = :woeid")
+    suspend fun removeFromMyCities(woeid: Int)
+
     @Query("SELECT * FROM my_cities")
     suspend fun getAllMyCities() : List<MyCity>
 
@@ -20,8 +23,5 @@ interface MyCitiesDAO {
 
     @Query("SELECT EXISTS(SELECT * FROM my_cities WHERE woeid = :woeid)")
     suspend fun checkIfMyCity(woeid: Int) : Boolean
-
-//    @Query("SELECT * FROM my_cities WHERE woeid = :woeid")
-//    suspend fun checkIfMyCity(woeid: Int)
 
 }

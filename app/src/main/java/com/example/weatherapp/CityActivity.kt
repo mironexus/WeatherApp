@@ -23,13 +23,12 @@ class CityActivity : AppCompatActivity() {
 
         cityItemViewModel.location.observe(this, Observer {
             //set data of the views
-            val image = cityItemViewModel.location.value?.consolidated_weather?.get(0)?.weather_state_abbr
-            binding.imageView.load("https://www.metaweather.com/static/img/weather/png/64/$image.png")
-            binding.title.text = cityItemViewModel.location.value?.title
             binding.date.text = cityItemViewModel.location.value?.consolidated_weather?.get(0)?.applicable_date.toString()
-            binding.theTemp.text = cityItemViewModel.location.value?.consolidated_weather?.get(0)?.the_temp.toString()
-            binding.visibility.text = cityItemViewModel.location.value?.consolidated_weather?.get(0)?.visibility.toString()
-            binding.wind.text = cityItemViewModel.location.value?.consolidated_weather?.get(0)?.wind_direction_compass
+            binding.time.text = cityItemViewModel.location.value?.consolidated_weather?.get(0)?.applicable_date.toString()
+            binding.weatherDescription.text = cityItemViewModel.location.value?.consolidated_weather?.get(0)?.weather_state_name
+            binding.tempLabel.text = cityItemViewModel.location.value?.consolidated_weather?.get(0)?.the_temp?.toInt().toString() + "°"
+            val image = cityItemViewModel.location.value?.consolidated_weather?.get(0)?.weather_state_abbr
+            binding.icon.load("https://www.metaweather.com/static/img/weather/png/64/$image.png")
         })
 
 
