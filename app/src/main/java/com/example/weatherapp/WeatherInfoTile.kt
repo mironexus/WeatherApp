@@ -1,11 +1,9 @@
-package com.example.weatherapp.repository
+package com.example.weatherapp
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import coil.load
-import com.example.weatherapp.R
 import com.example.weatherapp.databinding.WeatherInfoTileBinding
 
 class WeatherInfoTile(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
@@ -38,6 +36,10 @@ class WeatherInfoTile(context: Context, attrs: AttributeSet) : FrameLayout(conte
                 recycle()
             }
         }
+    }
+
+    fun setValue(value: String) {
+        binding.weatherInfoValue.text = value
     }
 
 }

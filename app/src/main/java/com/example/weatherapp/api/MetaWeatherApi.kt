@@ -2,6 +2,7 @@ package com.example.weatherapp.api
 
 import com.example.weatherapp.model.LocationDetails
 import com.example.weatherapp.model.SearchLocation
+import com.example.weatherapp.model.Weather
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -26,7 +27,7 @@ interface MetaWeatherApi {
     suspend fun getSingleLocationFromApiDate(@Path("woeid") woeid: Int,
                                              @Path("year") year: Int,
                                              @Path("month") month: Int,
-                                             @Path("day") day: Int): Response<LocationDetails>
+                                             @Path("day") day: Int): Response<List<Weather>>
 
     //4
     @GET("/api/location/search/")

@@ -8,5 +8,6 @@ class LocationDetails (
     var title: String,
     var consolidated_weather: List<Weather>,
     var time: Date,
+    var latt_long: String,
     var timezone: String
 ) : Serializable

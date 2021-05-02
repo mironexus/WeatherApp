@@ -15,7 +15,7 @@ import com.example.weatherapp.SharedViewModel
 import com.example.weatherapp.model.LocationCard
 import kotlinx.android.synthetic.main.search_recycler_item.view.*
 
-class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<LocationCard>>,
+class SearchRecycleAdapter(private var locationCardList: MutableLiveData<List<LocationCard>>,
                            private val listener: OnItemClickListener,
                            private val sharedViewModel: SharedViewModel,
                            private val isMyCitiesList: Boolean
@@ -23,8 +23,8 @@ class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<Locatio
     : RecyclerView.Adapter<SearchRecycleAdapter.RecycleViewHolder>() {
 
 
-    fun updateData(weatherList: MutableLiveData<List<LocationCard>>) {
-        this.weatherList = weatherList
+    fun updateData(locationCardList: MutableLiveData<List<LocationCard>>) {
+        this.locationCardList = locationCardList
 
         //find better notify method
         notifyDataSetChanged()
@@ -41,7 +41,7 @@ class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<Locatio
 
     override fun onBindViewHolder(holder: RecycleViewHolder, position: Int) {
 
-        val currentItem = weatherList.value?.get(position)
+        val currentItem = locationCardList.value?.get(position)
 
         if(currentItem != null) {
             holder.title.text = currentItem.title
@@ -84,7 +84,7 @@ class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<Locatio
 
     }
 
-    override fun getItemCount() = weatherList.value!!.size
+    override fun getItemCount() = locationCardList.value!!.size
 
     inner class RecycleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val title: TextView = itemView.title
@@ -100,7 +100,7 @@ class SearchRecycleAdapter(private var weatherList: MutableLiveData<List<Locatio
 
         override fun onClick(v: View?) {
             val position = adapterPosition
-            val currentItem = weatherList.value?.get(position)
+            val currentItem = locationCardList.value?.get(position)
             if (position != RecyclerView.NO_POSITION) {
                 listener.onItemClick(position)
             }

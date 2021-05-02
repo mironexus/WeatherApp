@@ -56,12 +56,15 @@ class SharedViewModel(application: Application): AndroidViewModel(application) {
     fun setAsMyCity(woeid: Int) {
         viewModelScope.launch {
             repository.setAsMyCity(woeid)
+            retrieveMyCities()
         }
     }
 
     fun removeFromMyCities(woeid: Int) {
         viewModelScope.launch {
             repository.removeFromMyCites(woeid)
+            retrieveLocations()
+            retrieveMyCities()
         }
     }
 

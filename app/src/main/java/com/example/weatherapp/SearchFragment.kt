@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -13,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.adapters.SearchRecycleAdapter
 import com.example.weatherapp.databinding.FragmentSearchBinding
+import kotlinx.android.synthetic.main.fragment_search.*
 
 
 class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
@@ -23,6 +26,7 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
 
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,7 +36,7 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         val view = binding.root
 
         //create adapter so updateData method can be used
-        var adapter = SearchRecycleAdapter(sharedViewModel.locations, this, sharedViewModel, false)
+        val adapter = SearchRecycleAdapter(sharedViewModel.locations, this, sharedViewModel, false)
         setAdapter(adapter)
 
         if (isNetworkConnected()) {
@@ -42,11 +46,14 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
             //every time that viewmodel updates update adapter with current viewmodel's list of Locations
             sharedViewModel.locations.observe(viewLifecycleOwner, Observer {
                 adapter.updateData(sharedViewModel.locations)
+                if (!sharedViewModel.locations.value.isNullOrEmpty()) {
+                    loadingPanel.visibility = View.GONE
+                }
             })
 
             binding.searchButton.setOnClickListener {
                 if (binding.searchEdittext.text.toString() != "") {
-                    var searchQuery = binding.searchEdittext.text.toString()
+                    val searchQuery = binding.searchEdittext.text.toString()
                     sharedViewModel.saveLocations(searchQuery)
                 }
             }

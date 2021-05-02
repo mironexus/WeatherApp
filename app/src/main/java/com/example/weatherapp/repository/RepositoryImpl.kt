@@ -2,13 +2,20 @@ package com.example.weatherapp.repository
 
 import android.app.Application
 import android.location.Location
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.weatherapp.api.RetrofitInstance
 import com.example.weatherapp.database.AppDatabase
 import com.example.weatherapp.database.MyCitiesDAO
 import com.example.weatherapp.database.SearchDAO
 import com.example.weatherapp.model.*
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.*
+import kotlin.time.minutes
 
 class RepositoryImpl(application: Application) {
 
@@ -21,8 +28,16 @@ class RepositoryImpl(application: Application) {
         myCitiesDAO = database.myCitiesDAO
     }
 
-    private suspend fun getAllLocations(): List<SearchLocation> {
+    private suspend fun getAllLocations(): MutableList<SearchLocation> {
         return searchDao.getAllSearchLocations()
+    }
+
+    private suspend fun getAllMyCitiesWoeids(): List<Int> {
+        return myCitiesDAO.getAllMyCitiesWoeids()
+    }
+
+    private suspend fun getAllSearchWoeids(): List<Int> {
+        return searchDao.getAllSearchWoeids()
     }
 
 
@@ -47,33 +62,49 @@ class RepositoryImpl(application: Application) {
 
     }
 
-
-
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun getLocationCardList(isMyCityList: Boolean): List<LocationCard> {
 
         //to be returned from function
         val locationCardList: MutableList<LocationCard> = mutableListOf()
 
-        val locationsFromDatabase = getAllLocations()
+        var locations: MutableList<LocationDetails> = mutableListOf()
 
-        for (location: SearchLocation in locationsFromDatabase) {
+        var woeids: List<Int>
 
+        if (isMyCityList) {
+            //get every woeid from my_cities table
+            woeids = getAllMyCitiesWoeids()
+            for(woeid in woeids) {
+                //for every woeid fetch SearchLocation with that woeid
+                locations.add(getSingleLocation(woeid))
+            }
+        }
+        else {
+            woeids = getAllSearchWoeids()
+            for(woeid in woeids) {
+                locations.add(getSingleLocation(woeid))
+            }
+        }
 
-            val check = checkIfMyCity(location.woeid)
-            val singleLocation = getSingleLocation(location.woeid)
-            val weather = getSingleWeather(singleLocation)
+        for (location: LocationDetails in locations) {
+
             val coordinates = getLattLongFloat(location.latt_long)
             val coordinatesString = getLattLong(coordinates)
             val distance = getDistance(coordinates).toInt() / 1000
+            val check = checkIfMyCity(location.woeid)
 
             var time = ""
             var timezone = ""
 
             if(isMyCityList) {
-                var tz = TimeZone.getTimeZone(singleLocation.timezone)
-                var shortTZ = tz.getDisplayName(false, TimeZone.SHORT)
+                val zoneId = ZoneId.of(location.timezone)
+                val timeWithZone = LocalDateTime.now(zoneId)
+                time = timeWithZone.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+
+                val tz = TimeZone.getTimeZone(location.timezone)
+                val shortTZ = tz.getDisplayName(false, TimeZone.SHORT)
                 timezone = shortTZ
-                time = singleLocation.time.time.toString()
             }
 
             val locationCard = LocationCard(
@@ -81,24 +112,16 @@ class RepositoryImpl(application: Application) {
                 location.woeid,
                 coordinatesString[0],
                 coordinatesString[1],
-                weather.the_temp,
-                weather.weather_state_abbr,
+                location.consolidated_weather[0].the_temp,
+                location.consolidated_weather[0].weather_state_abbr,
                 distance,
                 time,
                 timezone,
                 check
             )
-            //to put in myCities list
-            if(check && isMyCityList) {
-                locationCardList.add(locationCard)
-            }
-            //to filter non-MyCities from myCities list
-            else if(!check && isMyCityList) {
 
-            }
-            else {
-                locationCardList.add(locationCard)
-            }
+            locationCardList.add(locationCard)
+
         }
 
 
@@ -113,7 +136,7 @@ class RepositoryImpl(application: Application) {
     suspend fun getSingleLocation(woeid: Int): LocationDetails {
         val emptyWeatherList: List<Weather> = listOf()
         var date: Date = Date()
-        var location = LocationDetails(1,"", emptyWeatherList, date, "")
+        var location = LocationDetails(1,"", emptyWeatherList, date, "", "")
 
         val singleLocationResponse = RetrofitInstance.api.getSingleLocationFromApi(woeid)
         if(singleLocationResponse.isSuccessful) {
@@ -133,8 +156,8 @@ class RepositoryImpl(application: Application) {
     }
 
     private fun getLattLongFloat(lattLongString: String): MutableList<Float> {
-        var separateLattLong = lattLongString.split(",")
-        var lattLongFloat: MutableList<Float> = mutableListOf()
+        val separateLattLong = lattLongString.split(",")
+        val lattLongFloat: MutableList<Float> = mutableListOf()
 
         for(l in separateLattLong) {
             lattLongFloat.add(l.toFloat())
@@ -144,12 +167,12 @@ class RepositoryImpl(application: Application) {
 
     private fun getLattLong(lattLongFloat: MutableList<Float>): MutableList<String> {
 
-        var lattFloat = lattLongFloat[0]
-        var longFloat = lattLongFloat[1]
+        val lattFloat = lattLongFloat[0]
+        val longFloat = lattLongFloat[1]
 
         var lattString = ""
         var longString = ""
-        var compassValues: MutableList<String> = mutableListOf()
+        val compassValues: MutableList<String> = mutableListOf()
 
         var lattInt = lattFloat.toInt()
         var lattRemainder = lattFloat - lattInt
@@ -187,7 +210,7 @@ class RepositoryImpl(application: Application) {
 
     }
 
-    fun getDistance(coordinates: MutableList<Float>): Float {
+    private fun getDistance(coordinates: MutableList<Float>): Float {
 
         val start = Location("Start")
         start.latitude = 45.807259
@@ -197,8 +220,7 @@ class RepositoryImpl(application: Application) {
         destination.latitude = coordinates[0].toDouble()
         destination.longitude = coordinates[1].toDouble()
 
-        val distance = start.distanceTo(destination)
-        return distance
+        return start.distanceTo(destination)
     }
 
     suspend fun setAsMyCity(woeid: Int) {
@@ -212,6 +234,24 @@ class RepositoryImpl(application: Application) {
 
     suspend fun removeFromMyCites(woeid: Int) {
         myCitiesDAO.removeFromMyCities(woeid)
+    }
+
+    suspend fun getWeathersOnDate(woeid: Int, year: Int, month: Int, day: Int): List<Weather> {
+        //make request for locations defined by searchQuery
+        val weatherListResponse = RetrofitInstance.api.getSingleLocationFromApiDate(woeid, year, month, day)
+        var fetchedWeathers: List<Weather> = listOf()
+
+        if(weatherListResponse.isSuccessful) {
+            //get all Locations from search
+            fetchedWeathers = weatherListResponse.body()!!
+            fetchedWeathers = fetchedWeathers.subList(0, 10)
+        }
+        else {
+            Log.e("RETROFIT_ERROR", weatherListResponse.code().toString())
+        }
+
+        return fetchedWeathers
+
     }
 
 

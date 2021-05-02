@@ -20,6 +20,8 @@ import com.example.weatherapp.adapters.SearchRecycleAdapter
 import com.example.weatherapp.databinding.FragmentMyCitiesBinding
 import com.example.weatherapp.databinding.FragmentSearchBinding
 import kotlinx.android.synthetic.main.fragment_my_cities.*
+import kotlinx.android.synthetic.main.fragment_my_cities.loadingPanel
+import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.*
 
 
@@ -38,7 +40,7 @@ class MyCitiesFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         val view = binding.root
 
 
-        var adapter = SearchRecycleAdapter(sharedViewModel.myCities, this, sharedViewModel, true)
+        val adapter = SearchRecycleAdapter(sharedViewModel.myCities, this, sharedViewModel, true)
         setAdapter(adapter)
 
         itemTouchHelper.attachToRecyclerView(binding.searchRecyclerView)
@@ -46,8 +48,11 @@ class MyCitiesFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         if (isNetworkConnected()) {
             sharedViewModel.retrieveMyCities()
 
-            sharedViewModel.locations.observe(viewLifecycleOwner, Observer {
+            sharedViewModel.myCities.observe(viewLifecycleOwner, Observer {
                 adapter.updateData(sharedViewModel.myCities)
+                if (!sharedViewModel.myCities.value.isNullOrEmpty()) {
+                    loadingPanel.visibility = View.GONE
+                }
             })
         }
 
