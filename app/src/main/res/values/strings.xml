@@ -24,5 +24,5 @@
     <string name="recent">Recent</string>
     <string name="my_cities_title">My Cities</string>
     <string name="next_hours_label">Today</string>
-    <string name="next_days_label">Next 7 days</string>
+    <string name="next_days_label">Next 6 days</string>
 </resources>

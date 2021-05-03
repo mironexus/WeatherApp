@@ -68,7 +68,6 @@ class MyCitiesFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         }
 
 
-
         if (isNetworkConnected()) {
             sharedViewModel.retrieveMyCities()
 

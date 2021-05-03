@@ -16,7 +16,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.adapters.SearchRecycleAdapter
 import com.example.weatherapp.databinding.FragmentSearchBinding
+import kotlinx.android.synthetic.main.fragment_my_cities.*
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_search.loadingPanel
 
 
 class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
@@ -51,6 +53,8 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
                     loadingPanel.visibility = View.GONE
                 }
             })
+
+
 
             binding.searchIcon.setOnClickListener {
                 if (binding.searchInput.text.toString() != "") {
