@@ -20,4 +20,9 @@
     <string name="city_activity_pressure">PRESSURE</string>
     <string name="city_activity_visibility">VISIBILITY</string>
     <string name="city_activity_accuracy">ACCURACY</string>
+    <string name="search_cities_hint">Search cities</string>
+    <string name="recent">Recent</string>
+    <string name="my_cities_title">My Cities</string>
+    <string name="next_hours_label">Today</string>
+    <string name="next_days_label">Next 7 days</string>
 </resources>

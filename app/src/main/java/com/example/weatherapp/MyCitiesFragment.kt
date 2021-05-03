@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
@@ -22,6 +23,7 @@ import com.example.weatherapp.databinding.FragmentSearchBinding
 import kotlinx.android.synthetic.main.fragment_my_cities.*
 import kotlinx.android.synthetic.main.fragment_my_cities.loadingPanel
 import kotlinx.android.synthetic.main.fragment_search.*
+import okhttp3.internal.wait
 import java.util.*
 
 
@@ -43,7 +45,29 @@ class MyCitiesFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         val adapter = SearchRecycleAdapter(sharedViewModel.myCities, this, sharedViewModel, true)
         setAdapter(adapter)
 
-        itemTouchHelper.attachToRecyclerView(binding.searchRecyclerView)
+        var editMode = false
+
+        binding.editIcon.setOnClickListener {
+
+            if(!editMode) {
+                itemTouchHelper.attachToRecyclerView(binding.searchRecyclerView)
+                binding.editIcon.setImageResource(R.drawable.ic_done)
+                binding.calendarIcon.visibility = View.GONE
+                editMode = true
+            }
+            else {
+                itemTouchHelper.attachToRecyclerView(null)
+                binding.editIcon.setImageResource(R.drawable.ic_edit)
+                binding.calendarIcon.visibility = View.VISIBLE
+                editMode = false
+            }
+
+            adapter.setEditable(editMode)
+            setAdapter(adapter)
+
+        }
+
+
 
         if (isNetworkConnected()) {
             sharedViewModel.retrieveMyCities()
@@ -54,10 +78,14 @@ class MyCitiesFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
                     loadingPanel.visibility = View.GONE
                 }
             })
+
+            binding.refreshLayout.setOnRefreshListener {
+                sharedViewModel.retrieveMyCities()
+                binding.refreshLayout.isRefreshing = false
+            }
+
+
         }
-
-        //delete_button.updateLayoutParams { width = 200 }
-
 
 
         return view

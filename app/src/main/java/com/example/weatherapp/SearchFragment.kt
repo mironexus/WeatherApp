@@ -7,6 +7,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
@@ -51,17 +52,27 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
                 }
             })
 
-            binding.searchButton.setOnClickListener {
-                if (binding.searchEdittext.text.toString() != "") {
-                    val searchQuery = binding.searchEdittext.text.toString()
+            binding.searchIcon.setOnClickListener {
+                if (binding.searchInput.text.toString() != "") {
+                    val searchQuery = binding.searchInput.text.toString()
                     sharedViewModel.saveLocations(searchQuery)
                 }
             }
 
-            binding.deleteButton.setOnClickListener {
-                sharedViewModel.deleteAll()
-                adapter.updateData(sharedViewModel.locations)
+            binding.refreshLayout.setOnRefreshListener {
+                sharedViewModel.retrieveLocations()
+                //this is because of the case SearchFragment -> CityActivity -> set/unset isMyCity -> back button,
+                //the search_locations table that this fragment uses isn't updated, only the my_cities table so this is the way to notify
+                //this fragment that some location is set/unset as MyCity
+                setAdapter(adapter)
+                binding.refreshLayout.isRefreshing = false
             }
+
+            // delete recent search, to be implemented in settings
+//            binding.deleteButton.setOnClickListener {
+//                sharedViewModel.deleteAll()
+//                adapter.updateData(sharedViewModel.locations)
+//            }
 
         }
 

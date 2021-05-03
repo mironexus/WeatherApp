@@ -228,7 +228,7 @@ class RepositoryImpl(application: Application) {
         myCitiesDAO.insertMyCitiesLocation(myCity)
     }
 
-    private suspend fun checkIfMyCity(woeid: Int): Boolean {
+    suspend fun checkIfMyCity(woeid: Int): Boolean {
         return myCitiesDAO.checkIfMyCity(woeid)
     }
 

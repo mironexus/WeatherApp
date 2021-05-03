@@ -11,7 +11,6 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="118dp"
-
         >
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -19,18 +18,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="#FFFFFF"
+            android:background="#FFFFFF"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             app:title="Collapse">
-
-
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                app:layout_collapseMode="pin"
-                app:title="test">
+                app:layout_collapseMode="pin">
 
                 <ImageView
                     android:id="@+id/back_arrow"
@@ -58,10 +55,16 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/weather_master_info"
@@ -88,7 +91,8 @@
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/date"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="2dp"/>
 
             <TextView
                 android:id="@+id/weather_description"
@@ -97,8 +101,8 @@
                 android:text="@string/city_activity_weather_description"
                 android:textSize="14sp"
                 app:layout_constraintTop_toBottomOf="@id/time"
-                app:layout_constraintStart_toStartOf="parent"/>
-
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="3dp"/>
 
             <TextView
                 android:id="@+id/temp_label"
@@ -119,13 +123,24 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/separator"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintTop_toBottomOf="@id/icon"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp"
+                />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".CityActivity"
-                app:layout_constraintTop_toBottomOf="@id/icon"
+                app:layout_constraintTop_toBottomOf="@+id/separator"
                 app:layout_constraintStart_toStartOf="parent"
-                android:id="@+id/weather_info">
+                android:id="@+id/weather_info"
+                android:layout_marginTop="16dp">
 
                 <com.example.weatherapp.WeatherInfoTile
                     android:id="@+id/min_max"
@@ -190,17 +205,41 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <TextView
+                android:id="@+id/next_hours_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next_hours_label"
+                android:textSize="14sp"
+                android:includeFontPadding="false"
+                app:layout_constraintTop_toBottomOf="@+id/weather_info"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="12dp"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/hourly_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                app:layout_constraintTop_toBottomOf="@id/weather_info"
+                app:layout_constraintTop_toBottomOf="@+id/next_hours_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:orientation="horizontal"
                 tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/incremental_recycler_item"
+                android:layout_marginTop="10dp"
+                />
+
+            <TextView
+                android:id="@+id/next_days_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next_days_label"
+                android:textSize="14sp"
+                android:includeFontPadding="false"
+                app:layout_constraintTop_toBottomOf="@+id/hourly_recycler_view"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="18dp"
                 />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -208,21 +247,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                app:layout_constraintTop_toBottomOf="@id/hourly_recycler_view"
+                app:layout_constraintTop_toBottomOf="@+id/next_days_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:orientation="horizontal"
                 tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/incremental_recycler_item"
+                android:layout_marginTop="10dp"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        </androidx.core.widget.NestedScrollView>
 
-
-
-
-
-    </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

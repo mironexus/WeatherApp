@@ -7,12 +7,16 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.example.weatherapp.adapters.IncrementalRecyclerAdapter
 import com.example.weatherapp.adapters.SearchRecycleAdapter
 import com.example.weatherapp.databinding.ActivityCityBinding
 import com.example.weatherapp.model.Weather
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -33,9 +37,45 @@ class CityActivity : AppCompatActivity() {
 
         val woeid = intent.getIntExtra("woeid", 851128)
         cityItemViewModel.setLocation(woeid)
+        var isMyCity = intent.getBooleanExtra("isMyCity", false)
+
+        if (isMyCity) {
+            binding.setMyCity.setImageResource(R.drawable.ic_star_1)
+        }
+        else {
+            binding.setMyCity.setImageResource(R.drawable.ic_star_0)
+        }
+
+        binding.backArrow.setOnClickListener {
+            finish()
+        }
+
+        binding.setMyCity.setOnClickListener {
+
+            if (isMyCity) {
+                binding.setMyCity.setImageResource(R.drawable.ic_star_0)
+                cityItemViewModel.removeFromMyCities(woeid)
+                isMyCity = false
+            }
+            else {
+                binding.setMyCity.setImageResource(R.drawable.ic_star_1)
+                cityItemViewModel.setAsMyCity(woeid)
+                isMyCity = true
+            }
+
+        }
+
+
+        binding.refreshLayout.setOnRefreshListener {
+            cityItemViewModel.setLocation(woeid)
+            binding.refreshLayout.isRefreshing = false
+        }
+
 
         cityItemViewModel.location.observe(this, Observer {
             //set data of the views
+
+            binding.collapsingToolbar.title = cityItemViewModel.location.value?.title
 
             val zoneId = ZoneId.of(cityItemViewModel.location.value?.timezone)
             val timeWithZone = LocalDateTime.now(zoneId)
@@ -85,11 +125,7 @@ class CityActivity : AppCompatActivity() {
 
 
         //hourly forecast
-        val current = LocalDateTime.now()
-        val day = current.dayOfMonth
-        val month = current.monthValue
-        val year = current.year
-        cityItemViewModel.getWeathersOnDate(woeid, year, month, day)
+        cityItemViewModel.getWeathersOnDate(woeid)
         var hourlyAdapter = IncrementalRecyclerAdapter(cityItemViewModel.weatherListDate, true)
         binding.hourlyRecyclerView.adapter = hourlyAdapter
         val layoutManagerHourly = LinearLayoutManager(applicationContext)
