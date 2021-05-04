@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:padding="8dp"
-            android:background="@color/colorPrimary">
+            android:background="@color/tintPrimary">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,16 +41,16 @@
             <TextView
                 android:id="@+id/my_cities_title"
                 android:layout_width="176dp"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
                 android:text="@string/my_cities_title"
-                android:textColor="#ffffff"
+                android:textColor="@color/surface1"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 />
 
             <ImageView
@@ -58,10 +58,11 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_calendar"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="24dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/edit_icon"
                 android:layout_marginTop="12dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
                 />
 
             <ImageView
@@ -70,11 +71,11 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_edit"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="12dp"
-                app:layout_goneMarginStart="24dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
                 />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -82,7 +83,7 @@
         </androidx.appcompat.widget.Toolbar>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="84dp"
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -96,6 +97,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="64dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

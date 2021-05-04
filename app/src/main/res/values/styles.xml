@@ -2,9 +2,13 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/tintPrimary</item>
+        <item name="colorPrimaryDark">@color/tintPrimaryDark</item>
+        <item name="colorAccent">@color/tintSecondary</item>
+
+        <item name="android:windowBackground">@color/surface0</item>
+
+        <item name="android:textColorPrimary">@color/dark</item>
 
     </style>
 

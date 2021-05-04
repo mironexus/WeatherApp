@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.incremental_recycler_item.view.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class IncrementalRecyclerAdapter(
     private var weatherList: MutableLiveData<List<Weather>>,
@@ -70,7 +71,7 @@ class IncrementalRecyclerAdapter(
                 val dateWithDashesFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 var date = LocalDate.parse(currentItem?.applicable_date, dateWithDashesFormatter)
                 formatter = DateTimeFormatter.ofPattern("E")
-                holder.time.text = formatter.format(date)
+                holder.time.text = formatter.format(date).toUpperCase(Locale.getDefault())
                 holder.temperature.text = currentItem.the_temp.toInt().toString() + "°"
             }
 

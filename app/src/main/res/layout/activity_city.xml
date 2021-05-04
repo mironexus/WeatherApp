@@ -36,6 +36,7 @@
                     android:src="@drawable/ic_arrow_back"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     />
 
 
@@ -47,6 +48,7 @@
                     android:layout_gravity="end"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     />
 
             </androidx.appcompat.widget.Toolbar>
@@ -67,11 +69,21 @@
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/weather_master_info"
+            android:id="@+id/wrapper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".CityActivity"
-            android:padding="16dp">
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/weather_master_info"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="@id/wrapper"
+                app:layout_constraintStart_toStartOf="parent"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@color/surface1"
+                >
 
             <TextView
                 android:id="@+id/date"
@@ -102,7 +114,8 @@
                 android:textSize="14sp"
                 app:layout_constraintTop_toBottomOf="@id/time"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="3dp"/>
+                android:layout_marginTop="3dp"
+                android:textColor="@color/coldGray"/>
 
             <TextView
                 android:id="@+id/temp_label"
@@ -133,14 +146,18 @@
                 android:layout_marginTop="16dp"
                 />
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".CityActivity"
-                app:layout_constraintTop_toBottomOf="@+id/separator"
+                app:layout_constraintTop_toBottomOf="@id/weather_master_info"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:id="@+id/weather_info"
-                android:layout_marginTop="16dp">
+                android:paddingTop="16dp"
+                android:background="@color/surface1">
 
                 <com.example.weatherapp.WeatherInfoTile
                     android:id="@+id/min_max"
@@ -150,7 +167,8 @@
                     app:title="@string/city_activity_min_max"
                     app:value="@string/city_activity_temp_label"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/wind">
                 </com.example.weatherapp.WeatherInfoTile>
                 <com.example.weatherapp.WeatherInfoTile
                     android:id="@+id/wind"
@@ -160,7 +178,8 @@
                     app:title="@string/city_activity_wind"
                     app:value="@string/city_activity_temp_label"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/min_max">
+                    app:layout_constraintStart_toEndOf="@id/min_max"
+                    app:layout_constraintEnd_toStartOf="@id/humidity">
                 </com.example.weatherapp.WeatherInfoTile>
                 <com.example.weatherapp.WeatherInfoTile
                     android:id="@+id/humidity"
@@ -170,7 +189,8 @@
                     app:title="@string/city_activity_humidity"
                     app:value="@string/city_activity_temp_label"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/wind">
+                    app:layout_constraintStart_toEndOf="@id/wind"
+                    app:layout_constraintEnd_toEndOf="parent">
                 </com.example.weatherapp.WeatherInfoTile>
                 <com.example.weatherapp.WeatherInfoTile
                     android:id="@+id/pressure"
@@ -180,7 +200,8 @@
                     app:title="@string/city_activity_pressure"
                     app:value="@string/city_activity_temp_label"
                     app:layout_constraintTop_toBottomOf="@id/min_max"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/visibility">
                 </com.example.weatherapp.WeatherInfoTile>
                 <com.example.weatherapp.WeatherInfoTile
                     android:id="@+id/visibility"
@@ -190,7 +211,8 @@
                     app:title="@string/city_activity_visibility"
                     app:value="@string/city_activity_temp_label"
                     app:layout_constraintTop_toBottomOf="@id/wind"
-                    app:layout_constraintStart_toEndOf="@id/pressure">
+                    app:layout_constraintStart_toEndOf="@id/pressure"
+                    app:layout_constraintEnd_toStartOf="@id/accuracy">
                 </com.example.weatherapp.WeatherInfoTile>
                 <com.example.weatherapp.WeatherInfoTile
                     android:id="@+id/accuracy"
@@ -200,10 +222,25 @@
                     app:title="@string/city_activity_accuracy"
                     app:value="@string/city_activity_temp_label"
                     app:layout_constraintTop_toBottomOf="@id/humidity"
-                    app:layout_constraintStart_toEndOf="@id/visibility">
+                    app:layout_constraintStart_toEndOf="@id/visibility"
+                    app:layout_constraintEnd_toEndOf="parent">
                 </com.example.weatherapp.WeatherInfoTile>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".CityActivity"
+                app:layout_constraintTop_toBottomOf="@id/weather_info"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/hourly_forecast"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:paddingStart="16dp"
+                android:paddingBottom="24dp"
+                android:background="@drawable/search_rounded_container">
 
             <TextView
                 android:id="@+id/next_hours_label"
@@ -211,8 +248,10 @@
                 android:layout_height="wrap_content"
                 android:text="@string/next_hours_label"
                 android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/dark"
                 android:includeFontPadding="false"
-                app:layout_constraintTop_toBottomOf="@+id/weather_info"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="12dp"/>
 
@@ -230,14 +269,32 @@
                 android:layout_marginTop="10dp"
                 />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".CityActivity"
+                app:layout_constraintTop_toBottomOf="@id/hourly_forecast"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/daily_forecast"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:paddingStart="16dp"
+                android:paddingBottom="24dp"
+                android:background="@drawable/search_rounded_container">
+
             <TextView
                 android:id="@+id/next_days_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/next_days_label"
                 android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/coldGray"
                 android:includeFontPadding="false"
-                app:layout_constraintTop_toBottomOf="@+id/hourly_recycler_view"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="18dp"
                 />
@@ -255,6 +312,8 @@
                 tools:listitem="@layout/incremental_recycler_item"
                 android:layout_marginTop="10dp"
                 />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

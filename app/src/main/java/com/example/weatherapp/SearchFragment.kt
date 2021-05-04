@@ -50,7 +50,8 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
             sharedViewModel.locations.observe(viewLifecycleOwner, Observer {
                 adapter.updateData(sharedViewModel.locations)
                 if (!sharedViewModel.locations.value.isNullOrEmpty()) {
-                    loadingPanel.visibility = View.GONE
+                    binding.loadingPanel.visibility = View.INVISIBLE
+                    binding.recentLabel.visibility = View.VISIBLE
                 }
             })
 
@@ -58,6 +59,7 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
 
             binding.searchIcon.setOnClickListener {
                 if (binding.searchInput.text.toString() != "") {
+                    binding.loadingPanel.visibility = View.VISIBLE
                     val searchQuery = binding.searchInput.text.toString()
                     sharedViewModel.saveLocations(searchQuery)
                 }
