@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.example.weatherapp.cityitem
 
 import android.app.Application
 import android.os.Build
@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.model.LocationDetails
 import com.example.weatherapp.model.Weather
-import com.example.weatherapp.repository.RepositoryImpl
+import com.example.weatherapp.model.repository.RepositoryImpl
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 

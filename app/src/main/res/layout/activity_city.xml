@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="360dp"
     android:layout_height="match_parent"
-    tools:context=".CityActivity"
+    tools:context=".cityitem.CityActivity"
     android:layout_gravity="center">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -154,7 +154,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".CityActivity"
+                tools:context=".cityitem.CityActivity"
                 app:layout_constraintTop_toBottomOf="@id/weather_master_info"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -162,7 +162,7 @@
                 android:paddingTop="16dp"
                 android:background="@color/surface1">
 
-                <com.example.weatherapp.WeatherInfoTile
+                <com.example.weatherapp.cityitem.WeatherInfoTile
                     android:id="@+id/min_max"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -172,8 +172,8 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/wind">
-                </com.example.weatherapp.WeatherInfoTile>
-                <com.example.weatherapp.WeatherInfoTile
+                </com.example.weatherapp.cityitem.WeatherInfoTile>
+                <com.example.weatherapp.cityitem.WeatherInfoTile
                     android:id="@+id/wind"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -183,8 +183,8 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/min_max"
                     app:layout_constraintEnd_toStartOf="@id/humidity">
-                </com.example.weatherapp.WeatherInfoTile>
-                <com.example.weatherapp.WeatherInfoTile
+                </com.example.weatherapp.cityitem.WeatherInfoTile>
+                <com.example.weatherapp.cityitem.WeatherInfoTile
                     android:id="@+id/humidity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -194,8 +194,8 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/wind"
                     app:layout_constraintEnd_toEndOf="parent">
-                </com.example.weatherapp.WeatherInfoTile>
-                <com.example.weatherapp.WeatherInfoTile
+                </com.example.weatherapp.cityitem.WeatherInfoTile>
+                <com.example.weatherapp.cityitem.WeatherInfoTile
                     android:id="@+id/pressure"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -205,8 +205,8 @@
                     app:layout_constraintTop_toBottomOf="@id/min_max"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/visibility">
-                </com.example.weatherapp.WeatherInfoTile>
-                <com.example.weatherapp.WeatherInfoTile
+                </com.example.weatherapp.cityitem.WeatherInfoTile>
+                <com.example.weatherapp.cityitem.WeatherInfoTile
                     android:id="@+id/visibility"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -216,8 +216,8 @@
                     app:layout_constraintTop_toBottomOf="@id/wind"
                     app:layout_constraintStart_toEndOf="@id/pressure"
                     app:layout_constraintEnd_toStartOf="@id/accuracy">
-                </com.example.weatherapp.WeatherInfoTile>
-                <com.example.weatherapp.WeatherInfoTile
+                </com.example.weatherapp.cityitem.WeatherInfoTile>
+                <com.example.weatherapp.cityitem.WeatherInfoTile
                     android:id="@+id/accuracy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -227,14 +227,14 @@
                     app:layout_constraintTop_toBottomOf="@id/humidity"
                     app:layout_constraintStart_toEndOf="@id/visibility"
                     app:layout_constraintEnd_toEndOf="parent">
-                </com.example.weatherapp.WeatherInfoTile>
+                </com.example.weatherapp.cityitem.WeatherInfoTile>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".CityActivity"
+                tools:context=".cityitem.CityActivity"
                 app:layout_constraintTop_toBottomOf="@id/weather_info"
                 app:layout_constraintStart_toStartOf="parent"
                 android:id="@+id/hourly_forecast"
@@ -277,7 +277,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".CityActivity"
+                tools:context=".cityitem.CityActivity"
                 app:layout_constraintTop_toBottomOf="@id/hourly_forecast"
                 app:layout_constraintStart_toStartOf="parent"
                 android:id="@+id/daily_forecast"

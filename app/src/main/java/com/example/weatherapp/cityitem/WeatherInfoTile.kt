@@ -1,9 +1,10 @@
-package com.example.weatherapp
+package com.example.weatherapp.cityitem
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import com.example.weatherapp.R
 import com.example.weatherapp.databinding.WeatherInfoTileBinding
 
 class WeatherInfoTile(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {

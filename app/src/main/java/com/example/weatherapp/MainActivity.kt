@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.weatherapp.databinding.ActivityMainBinding
 import androidx.core.view.get
+import com.example.weatherapp.fragments.MyCitiesFragment
+import com.example.weatherapp.fragments.SearchFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -16,7 +18,8 @@ class MainActivity : AppCompatActivity() {
 
 
         val searchFragment = SearchFragment()
-        val myCitiesFragment = MyCitiesFragment()
+        val myCitiesFragment =
+            MyCitiesFragment()
 //        val settingsFragment = SettingsFragment()
 
         //sets default fragment

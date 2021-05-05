@@ -1,4 +1,4 @@
-package com.example.weatherapp.adapters
+package com.example.weatherapp.fragments
 
 import android.content.Intent
 import android.content.res.Resources
@@ -12,9 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.weatherapp.CityActivity
+import com.example.weatherapp.cityitem.CityActivity
 import com.example.weatherapp.R
-import com.example.weatherapp.SharedViewModel
 import com.example.weatherapp.model.LocationCard
 import kotlinx.android.synthetic.main.search_recycler_item.view.*
 

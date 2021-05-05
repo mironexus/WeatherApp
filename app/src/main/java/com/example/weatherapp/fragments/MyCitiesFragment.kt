@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.example.weatherapp.fragments
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weatherapp.adapters.SearchRecycleAdapter
+import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentMyCitiesBinding
 import java.util.*
 
@@ -34,7 +34,12 @@ class MyCitiesFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         val view = binding.root
 
 
-        val adapter = SearchRecycleAdapter(sharedViewModel.myCities, this, sharedViewModel, true)
+        val adapter = SearchRecycleAdapter(
+            sharedViewModel.myCities,
+            this,
+            sharedViewModel,
+            true
+        )
         setAdapter(adapter)
 
         var editMode = false

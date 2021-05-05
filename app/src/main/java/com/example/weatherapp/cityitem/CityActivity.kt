@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.example.weatherapp.cityitem
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -11,7 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
-import com.example.weatherapp.adapters.IncrementalRecyclerAdapter
+import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ActivityCityBinding
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -47,19 +47,27 @@ class CityActivity : AppCompatActivity() {
             }
 
             if (isMyCity) {
-                binding.setMyCity.setImageResource(R.drawable.ic_star_1)
+                binding.setMyCity.setImageResource(
+                    R.drawable.ic_star_1
+                )
             } else {
-                binding.setMyCity.setImageResource(R.drawable.ic_star_0)
+                binding.setMyCity.setImageResource(
+                    R.drawable.ic_star_0
+                )
             }
 
             binding.setMyCity.setOnClickListener {
 
                 if (isMyCity) {
-                    binding.setMyCity.setImageResource(R.drawable.ic_star_0)
+                    binding.setMyCity.setImageResource(
+                        R.drawable.ic_star_0
+                    )
                     cityItemViewModel.removeFromMyCities(woeid)
                     isMyCity = false
                 } else {
-                    binding.setMyCity.setImageResource(R.drawable.ic_star_1)
+                    binding.setMyCity.setImageResource(
+                        R.drawable.ic_star_1
+                    )
                     cityItemViewModel.setAsMyCity(woeid)
                     isMyCity = true
                 }
@@ -133,7 +141,11 @@ class CityActivity : AppCompatActivity() {
 
             //hourly forecast
             cityItemViewModel.getWeathersOnDate(woeid)
-            var hourlyAdapter = IncrementalRecyclerAdapter(cityItemViewModel.weatherListDate, true)
+            var hourlyAdapter =
+                IncrementalRecyclerAdapter(
+                    cityItemViewModel.weatherListDate,
+                    true
+                )
             binding.hourlyRecyclerView.adapter = hourlyAdapter
             val layoutManagerHourly = LinearLayoutManager(applicationContext)
             layoutManagerHourly.orientation = LinearLayoutManager.HORIZONTAL
@@ -145,7 +157,11 @@ class CityActivity : AppCompatActivity() {
 
 
             //daily forecast
-            var dailyAdapter = IncrementalRecyclerAdapter(cityItemViewModel.weatherList, false)
+            var dailyAdapter =
+                IncrementalRecyclerAdapter(
+                    cityItemViewModel.weatherList,
+                    false
+                )
             binding.dailyRecyclerView.adapter = dailyAdapter
             val layoutManagerDaily = LinearLayoutManager(applicationContext)
             layoutManagerDaily.orientation = LinearLayoutManager.HORIZONTAL

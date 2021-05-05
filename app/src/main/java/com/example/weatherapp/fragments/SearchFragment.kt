@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.example.weatherapp.fragments
 
 import android.R
 import android.content.Context
@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.weatherapp.adapters.SearchRecycleAdapter
 import com.example.weatherapp.databinding.FragmentSearchBinding
 
 
@@ -48,7 +47,12 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
 
 
         //create adapter so updateData method can be used
-        val adapter = SearchRecycleAdapter(sharedViewModel.locations, this, sharedViewModel, false)
+        val adapter = SearchRecycleAdapter(
+            sharedViewModel.locations,
+            this,
+            sharedViewModel,
+            false
+        )
         setAdapter(adapter)
 
 
@@ -89,6 +93,7 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
                 if (binding.searchInput.text.length > 2) {
                     binding.searchInput.error = null
                     binding.loadingPanel.visibility = View.VISIBLE
+                    binding.loadingPanel.bringToFront()
                     val searchQuery = binding.searchInput.text.toString()
                     sharedViewModel.saveLocations(searchQuery)
                     binding.searchInput.text.clear()

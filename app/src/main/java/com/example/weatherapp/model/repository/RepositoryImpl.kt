@@ -1,4 +1,4 @@
-package com.example.weatherapp.repository
+package com.example.weatherapp.model.repository
 
 import android.app.Application
 import android.location.Location
@@ -6,7 +6,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.weatherapp.model.api.RetrofitInstance
-import com.example.weatherapp.database.*
+import com.example.weatherapp.model.database.*
 import com.example.weatherapp.model.*
 import java.time.LocalDateTime
 import java.time.ZoneId

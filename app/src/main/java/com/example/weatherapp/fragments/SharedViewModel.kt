@@ -1,11 +1,11 @@
-package com.example.weatherapp
+package com.example.weatherapp.fragments
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.model.LocationCard
-import com.example.weatherapp.repository.RepositoryImpl
+import com.example.weatherapp.model.repository.RepositoryImpl
 import kotlinx.coroutines.launch
 
 
