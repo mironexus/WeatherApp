@@ -3,13 +3,9 @@ package com.example.weatherapp
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.database.AppDatabase
 import com.example.weatherapp.model.LocationCard
-import com.example.weatherapp.model.SearchLocation
 import com.example.weatherapp.repository.RepositoryImpl
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
@@ -17,13 +13,23 @@ class SharedViewModel(application: Application): AndroidViewModel(application) {
 
     var locations = MutableLiveData<List<LocationCard>>()
     var myCities = MutableLiveData<List<LocationCard>>()
+    var suggestions = MutableLiveData<ArrayList<String>>()
 
     private val repository: RepositoryImpl
 
     init {
         locations.value = listOf()
         myCities.value = listOf()
+        suggestions.value = arrayListOf<String>()
+        suggestions.value!!.add("Zagreb")
+        suggestions.value!!.add("London")
         repository = RepositoryImpl(getApplication())
+    }
+
+    fun getSearchSuggestionList(query: String) {
+        viewModelScope.launch {
+            suggestions.value = repository.getSearchSuggestionList(query)
+        }
     }
 
 

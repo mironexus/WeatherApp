@@ -5,17 +5,15 @@ import android.location.Location
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.example.weatherapp.api.RetrofitInstance
-import com.example.weatherapp.database.AppDatabase
-import com.example.weatherapp.database.MyCitiesDAO
-import com.example.weatherapp.database.SearchDAO
+import com.example.weatherapp.model.api.RetrofitInstance
+import com.example.weatherapp.database.*
 import com.example.weatherapp.model.*
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
-import kotlin.time.minutes
+import kotlin.collections.ArrayList
 
 class RepositoryImpl(application: Application) {
 
@@ -38,6 +36,28 @@ class RepositoryImpl(application: Application) {
 
     private suspend fun getAllSearchWoeids(): List<Int> {
         return searchDao.getAllSearchWoeids()
+    }
+
+    suspend fun getSearchSuggestionList(query: String): ArrayList<String> {
+        val locationListResponse = RetrofitInstance.api.getLocationsFromApi(query)
+        val fetchedLocations: List<SearchLocation>
+
+        var woeidList: ArrayList<String> = arrayListOf<String>()
+
+        if(locationListResponse.isSuccessful) {
+            //get all Locations from search
+            fetchedLocations = locationListResponse.body()!!
+
+            //save searchLocation titles from list into list that is being returned one by one
+            for (fetchedLocation: SearchLocation in fetchedLocations) {
+                    woeidList.add(fetchedLocation.title)
+            }
+        }
+        else {
+            Log.e("RETROFIT_ERROR", locationListResponse.code().toString())
+        }
+
+        return woeidList
     }
 
 
@@ -244,6 +264,7 @@ class RepositoryImpl(application: Application) {
         if(weatherListResponse.isSuccessful) {
             //get all Locations from search
             fetchedWeathers = weatherListResponse.body()!!
+            //take only first ten items from list
             fetchedWeathers = fetchedWeathers.subList(0, 10)
         }
         else {

@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginStart
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -35,8 +34,6 @@ class SearchRecycleAdapter(private var locationCardList: MutableLiveData<List<Lo
 
     fun updateData(locationCardList: MutableLiveData<List<LocationCard>>) {
         this.locationCardList = locationCardList
-
-        //find better notify method
         notifyDataSetChanged()
     }
 

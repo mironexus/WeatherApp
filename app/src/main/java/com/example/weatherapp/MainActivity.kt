@@ -1,17 +1,10 @@
 package com.example.weatherapp
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.weatherapp.databinding.ActivityMainBinding
-import androidx.appcompat.widget.SearchView;
-import com.example.weatherapp.database.AppDatabase
+import androidx.core.view.get
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -20,7 +13,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
 
         val searchFragment = SearchFragment()
@@ -32,16 +24,18 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNav.setOnNavigationItemSelectedListener {
             when(it.itemId) {
-                R.id.search-> setFragment(searchFragment)
-                R.id.my_cities -> setFragment(myCitiesFragment)
-//                R.id.settings -> setFragment(settingsFragment)
+                R.id.search-> {setFragment(searchFragment)
+                    binding.bottomNav.menu.get(1).setIcon(R.drawable.ic_star_0)}
+                R.id.my_cities -> {setFragment(myCitiesFragment)
+                    it.setIcon(R.drawable.ic_star_1)
+                }
+                R.id.settings -> binding.bottomNav.menu.get(1).setIcon(R.drawable.ic_star_0)
             }
             true
         }
 
-
-
     }
+
 
     private fun setFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().apply {
@@ -49,19 +43,5 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
     }
-
-    private fun isNetworkConnected(): Boolean {
-        //1
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        //2
-        val activeNetwork = connectivityManager.activeNetwork
-        //3
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
-        //4
-        return networkCapabilities != null &&
-                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
-
-
 
 }

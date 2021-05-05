@@ -1,7 +1,6 @@
 package com.example.weatherapp.database
 
 import androidx.room.*
-import com.example.weatherapp.model.SearchLocation
 
 @Dao
 interface SearchDAO {

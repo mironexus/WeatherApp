@@ -1,24 +1,22 @@
 package com.example.weatherapp
 
+import android.R
 import android.content.Context
-import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
-import androidx.activity.OnBackPressedCallback
+import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.adapters.SearchRecycleAdapter
 import com.example.weatherapp.databinding.FragmentSearchBinding
-import kotlinx.android.synthetic.main.fragment_my_cities.*
-import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.fragment_search.loadingPanel
 
 
 class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
@@ -34,16 +32,74 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //activity?.title = getString(R.string.search)
+
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         val view = binding.root
+
+
+        //adapter for suggestion list
+        val adapterSuggestion = activity?.let { it1 ->
+            ArrayAdapter(
+                it1,
+                R.layout.simple_list_item_1, sharedViewModel.suggestions.value!!
+            )
+        }
+        binding.searchInput.setAdapter(adapterSuggestion)
+
 
         //create adapter so updateData method can be used
         val adapter = SearchRecycleAdapter(sharedViewModel.locations, this, sharedViewModel, false)
         setAdapter(adapter)
 
+
+        //set up x icon
+        binding.searchInput.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) binding.deleteInput.visibility = View.VISIBLE else binding.deleteInput.visibility = View.INVISIBLE
+        }
+
+        binding.deleteInput.setOnClickListener {
+            binding.searchInput.text.clear()
+        }
+
         if (isNetworkConnected()) {
-            //set viewmodel data
+
+            //if there is any data in viewmodel's suggestion list, reset the adapter of searchInput
+            sharedViewModel.suggestions.observe(viewLifecycleOwner, Observer {
+                if (!sharedViewModel.suggestions.value.isNullOrEmpty()) {
+                    adapterSuggestion?.clear()
+                    adapterSuggestion?.addAll(sharedViewModel.suggestions.value!!)
+                    adapterSuggestion?.notifyDataSetChanged()
+                    binding.searchInput.setAdapter(adapterSuggestion)
+                }
+            })
+
+            //start network call for suggestion list only if more than one letter is typed in the searchInput
+            binding.searchInput.addTextChangedListener(object: TextWatcher {
+                override fun afterTextChanged(p0: Editable?) {}
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    if(binding.searchInput.text.length > 1)
+                        sharedViewModel.getSearchSuggestionList(binding.searchInput.text.toString())
+                }
+
+            })
+
+            binding.searchIcon.setOnClickListener {
+                if (binding.searchInput.text.length > 2) {
+                    binding.searchInput.error = null
+                    binding.loadingPanel.visibility = View.VISIBLE
+                    val searchQuery = binding.searchInput.text.toString()
+                    sharedViewModel.saveLocations(searchQuery)
+                    binding.searchInput.text.clear()
+                }
+                else {
+                    binding.searchInput.error = "Input must have at least 3 characters!"
+                }
+            }
+
+
+            //set viewmodel locations
             sharedViewModel.retrieveLocations()
 
             //every time that viewmodel updates update adapter with current viewmodel's list of Locations
@@ -56,15 +112,6 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
             })
 
 
-
-            binding.searchIcon.setOnClickListener {
-                if (binding.searchInput.text.toString() != "") {
-                    binding.loadingPanel.visibility = View.VISIBLE
-                    val searchQuery = binding.searchInput.text.toString()
-                    sharedViewModel.saveLocations(searchQuery)
-                }
-            }
-
             binding.refreshLayout.setOnRefreshListener {
                 sharedViewModel.retrieveLocations()
                 //this is because of the case SearchFragment -> CityActivity -> set/unset isMyCity -> back button,
@@ -73,6 +120,10 @@ class SearchFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
                 setAdapter(adapter)
                 binding.refreshLayout.isRefreshing = false
             }
+
+
+
+
 
             // delete recent search, to be implemented in settings
 //            binding.deleteButton.setOnClickListener {

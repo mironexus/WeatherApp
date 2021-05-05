@@ -4,8 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.weatherapp.model.MyCity
-import com.example.weatherapp.model.SearchLocation
 
 @Dao
 interface MyCitiesDAO {
@@ -18,8 +16,6 @@ interface MyCitiesDAO {
 
     @Query("SELECT * FROM my_cities")
     suspend fun getAllMyCitiesWoeids() : List<Int>
-
-
 
     @Query("DELETE FROM my_cities")
     suspend fun deleteAllMyCities()

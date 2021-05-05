@@ -31,8 +31,6 @@ class IncrementalRecyclerAdapter(
 
     fun updateData(weatherList: MutableLiveData<List<Weather>>) {
         this.weatherList = weatherList
-
-        //find better notify method
         notifyDataSetChanged()
     }
 

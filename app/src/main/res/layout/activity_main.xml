@@ -7,14 +7,6 @@
     tools:context=".MainActivity"
     android:fitsSystemWindows="false">
 
-<!--    <androidx.appcompat.widget.Toolbar android:id="@+id/my_toolbar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:background="?attr/colorPrimary"-->
-<!--        android:elevation="4dp"-->
-<!--        />-->
-
-
     <FrameLayout
         android:id="@+id/frag_container"
         android:layout_width="match_parent"
@@ -28,6 +20,10 @@
         android:layout_alignParentBottom="true"
         android:background="?android:attr/windowBackground"
         app:menu="@menu/nav_menu"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:labelVisibilityMode="selected"
+        app:itemHorizontalTranslationEnabled="false"
         />
 
 </RelativeLayout>

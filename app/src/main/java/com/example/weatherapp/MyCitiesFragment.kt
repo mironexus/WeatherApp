@@ -8,9 +8,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -19,11 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.adapters.SearchRecycleAdapter
 import com.example.weatherapp.databinding.FragmentMyCitiesBinding
-import com.example.weatherapp.databinding.FragmentSearchBinding
-import kotlinx.android.synthetic.main.fragment_my_cities.*
-import kotlinx.android.synthetic.main.fragment_my_cities.loadingPanel
-import kotlinx.android.synthetic.main.fragment_search.*
-import okhttp3.internal.wait
 import java.util.*
 
 
@@ -73,9 +65,6 @@ class MyCitiesFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
 
             sharedViewModel.myCities.observe(viewLifecycleOwner, Observer {
                 adapter.updateData(sharedViewModel.myCities)
-                if (!sharedViewModel.myCities.value.isNullOrEmpty()) {
-                    loadingPanel.visibility = View.GONE
-                }
             })
 
             binding.refreshLayout.setOnRefreshListener {
@@ -83,12 +72,12 @@ class MyCitiesFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
                 binding.refreshLayout.isRefreshing = false
             }
 
-
         }
 
 
         return view
     }
+
 
     private fun setAdapter(adapter: SearchRecycleAdapter) {
         //binding.searchRecyclerView.adapter = SearchRecycleAdapter(sharedViewModel.locations, this)
@@ -97,16 +86,8 @@ class MyCitiesFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         binding.searchRecyclerView.setHasFixedSize(true)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
-    override fun onItemClick(position: Int) {
-
-    }
-
-
+    //for rearrange
     private val itemTouchHelper by lazy {
 
         val simpleItemTouchCallback =
@@ -142,7 +123,7 @@ class MyCitiesFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
                 override fun clearView(recyclerView: RecyclerView,
                                        viewHolder: RecyclerView.ViewHolder) {
                     super.clearView(recyclerView, viewHolder)
-                    viewHolder?.itemView?.alpha = 1.0f
+                    viewHolder.itemView.alpha = 1.0f
                 }
 
             }
@@ -159,6 +140,15 @@ class MyCitiesFragment : Fragment(), SearchRecycleAdapter.OnItemClickListener {
         //4
         return networkCapabilities != null &&
                 networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onItemClick(position: Int) {
+
     }
 
 }

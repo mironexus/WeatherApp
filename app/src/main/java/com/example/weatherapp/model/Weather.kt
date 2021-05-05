@@ -1,10 +1,6 @@
 package com.example.weatherapp.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import java.io.Serializable
-import java.time.LocalDateTime
-import java.util.*
 
 data class Weather(
     var id: Long,
